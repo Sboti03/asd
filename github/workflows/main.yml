@@ -1,0 +1,21 @@
+name: Create Zip Archive
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Zip public folder
+      run: |
+        zip -r public.zip public
+        
+    - name: Upload archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: public.zip
+        path: public.zip
