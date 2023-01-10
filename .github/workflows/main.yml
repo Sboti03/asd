@@ -1,18 +1,11 @@
 name: Release
-on: [push]
+on: push
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Create Archive Release
-        uses: thedoctor0/zip-release@master
+      - uses: actions/checkout@v3
+      - uses: actions/upload-artifact@v3
         with:
-          filename: 'release.zip'
-          path: public  
-          exclusions: '*.git*'
-      - name: Upload Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: 'release.zip'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: app
+          path: public
