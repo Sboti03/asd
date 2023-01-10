@@ -14,8 +14,8 @@ jobs:
       run: |
         zip -r public.zip public
         
-    - name: Upload archive
-      uses: actions/upload-artifact@v2
+    - name: Archive Release
+      uses: actions/v2
       with:
-        name: public.zip
-        path: public.zip
+        type: 'zip'
+        filename: 'public.zip'
