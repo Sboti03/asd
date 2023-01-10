@@ -1,21 +1,31 @@
-name: Create Zip Archive
+name: Build and Release
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
-      
-    - name: Zip public folder
-      run: |
-        zip -r public.zip public
-        
-    - name: Archive Release
-      uses: actions/v2
+
+    - name: Create ZIP archive
+      uses: actions/archive-file@v1
       with:
-        type: 'zip'
-        filename: 'public.zip'
+        archive_format: zip
+        path: public
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: Release ${{ env.TAG_NAME }}
+        draft: false
+        prerelease: false
+        file_output: public.zip
