@@ -1,31 +1,21 @@
-name: Build and Release
-
+name: Release
 on:
   push:
-    branches:
-      - main
-
+    tags:
+      - '*'
 jobs:
-  build-and-release:
+  release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Create ZIP archive
-      uses: actions/archive-file@v2
-      with:
-        archive_format: zip
-        path: public
-
-    - name: Create Release
-      uses: actions/create-release@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: test
-        release_name: Release test
-        draft: false
-        prerelease: false
-        file_output: public.zip
+      - uses: actions/checkout@master
+      - name: Create Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: 'release.zip'
+          path: public
+          exclusions: '*.git*'
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'release.zip'
+          token: ${{ secrets.GITHUB_TOKEN }}
